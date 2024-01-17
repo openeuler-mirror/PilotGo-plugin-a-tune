@@ -6,6 +6,21 @@ import (
 	"openeuler.org/PilotGo/atune-plugin/model"
 )
 
+// 根据id获取调优命令
+func GetTuneComandById(tune_id int) (map[int]model.TaskCommand, error) {
+	var t model.Tunes
+	if err := db.MySQL().Where("id = ?", tune_id).Find(&t).Error; err != nil {
+		return nil, err
+	}
+	tuneCommand := make(map[int]model.TaskCommand)
+	tuneCommand[tune_id] = model.TaskCommand{
+		PrepareCommand: t.WorkDirectory + " && " + t.Prepare,
+		TuneCommand:    t.Tune,
+		RestoreCommand: t.Restore,
+	}
+	return tuneCommand, nil
+}
+
 func QueryTunes(query *response.PaginationQ) ([]*model.Tunes, int64, error) {
 	var tunes []*model.Tunes
 	if err := db.MySQL().Limit(query.PageSize).Offset((query.Page - 1) * query.PageSize).Find(&tunes).Error; err != nil {
