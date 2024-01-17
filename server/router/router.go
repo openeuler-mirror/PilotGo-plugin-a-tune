@@ -59,6 +59,7 @@ func registerAPIs(router *gin.Engine) {
 
 	task := router.Group("/plugin/" + plugin.GlobalClient.PluginInfo.Name)
 	{
+		task.POST("task_run", controller.StartTask)
 		task.POST("task_new", controller.CreatTask)
 		task.GET("tasks", controller.TaskLists)
 		task.DELETE("task_delete", controller.DeleteTask)

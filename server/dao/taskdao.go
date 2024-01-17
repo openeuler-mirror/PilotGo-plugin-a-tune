@@ -1,17 +1,9 @@
 package dao
 
 import (
-	"time"
-
 	"gitee.com/openeuler/PilotGo/sdk/response"
 	"openeuler.org/PilotGo/atune-plugin/db"
 	"openeuler.org/PilotGo/atune-plugin/model"
-)
-
-const (
-	// 任务状态
-	Completed = "已完成"
-	Executing = "执行中"
 )
 
 func QueryTaskLists(query *response.PaginationQ) ([]*model.Tasks, int64, error) {
@@ -33,12 +25,8 @@ func SaveTask(task *model.Tasks) (int, error) {
 	}
 	return task.ID, nil
 }
-func UpdateTask(dbtaskid int) error {
+func UpdateTask(dbtaskid int, task *model.Tasks) error {
 	var t model.Tasks
-	task := model.Tasks{
-		TaskStatus: Completed,
-		UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
-	}
 	if err := db.MySQL().Model(&t).Where("id = ?", dbtaskid).Updates(&task).Error; err != nil {
 		return err
 	}

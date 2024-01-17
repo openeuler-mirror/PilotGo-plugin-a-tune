@@ -26,9 +26,9 @@ func SaveRusult(result *model.RunResult) error {
 	return nil
 }
 
-func UpdateResult(dbtaskid int, machine_uuid string, result *model.RunResult) error {
+func UpdateResult(dbtaskid int, machine_uuid string, commandType string, result *model.RunResult) error {
 	var r model.RunResult
-	if err := db.MySQL().Model(&r).Where("task_id = ? AND machine_uuid = ?", dbtaskid, machine_uuid).Updates(&result).Error; err != nil {
+	if err := db.MySQL().Model(&r).Where("task_id = ? AND machine_uuid = ? AND command_type = ?", dbtaskid, machine_uuid, commandType).Updates(&result).Error; err != nil {
 		return err
 	}
 	return nil
@@ -67,16 +67,4 @@ func SearchResult(searchKey string, query *response.PaginationQ) ([]*model.RunRe
 		return nil, 0, err
 	}
 	return result, total, nil
-}
-
-func IsExistCommandResult(machine_uuid string, command string) (bool, error) {
-	var r model.RunResult
-	err := db.MySQL().Where("machine_uuid = ? AND command = ?", machine_uuid, command).Find(&r).Error
-	if err != nil {
-		return false, err
-	}
-	if r.ID != 0 && command == r.Command {
-		return true, nil
-	}
-	return false, nil
 }

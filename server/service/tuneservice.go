@@ -9,6 +9,10 @@ import (
 	"openeuler.org/PilotGo/atune-plugin/model"
 )
 
+func GetCommandByID(tune_id int) (map[int]model.TaskCommand, error) {
+	command, err := dao.GetTuneComandById(tune_id)
+	return command, err
+}
 func QueryTunes(query *response.PaginationQ) ([]*model.Tunes, int, error) {
 	if data, total, err := dao.QueryTunes(query); err != nil {
 		return nil, 0, err
