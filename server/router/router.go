@@ -68,8 +68,8 @@ func registerAPIs(router *gin.Engine) {
 
 	restune := router.Group("/plugin/" + plugin.GlobalClient.PluginInfo.Name)
 	{
+		restune.GET("result", controller.QueryResults)
 		restune.DELETE("result_delete", controller.DeleteResult)
-		restune.GET("result_search", controller.SearchResult)
 	}
 }
 

@@ -6,7 +6,6 @@ import (
 
 	"gitee.com/openeuler/PilotGo/sdk/common"
 	"gitee.com/openeuler/PilotGo/sdk/logger"
-	"gitee.com/openeuler/PilotGo/sdk/response"
 	"openeuler.org/PilotGo/atune-plugin/dao"
 	"openeuler.org/PilotGo/atune-plugin/model"
 )
@@ -125,10 +124,10 @@ func UpdateResultStatus(dbtaskid int, uuid string, commandType string, resultSta
 	}
 	return nil
 }
-func SearchResult(searchKey string, query *response.PaginationQ) ([]*model.RunResult, int, error) {
-	if data, total, err := dao.SearchResult(searchKey, query); err != nil {
-		return nil, 0, err
+func SearchResultByTaskId(taskId string) ([]*model.RunResult, error) {
+	if data, err := dao.SearchResult(taskId); err != nil {
+		return nil, err
 	} else {
-		return data, int(total), nil
+		return data, nil
 	}
 }
