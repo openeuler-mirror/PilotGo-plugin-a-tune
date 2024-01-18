@@ -1,6 +1,8 @@
 package dao
 
 import (
+	"time"
+
 	"gitee.com/openeuler/PilotGo/sdk/response"
 	"openeuler.org/PilotGo/atune-plugin/db"
 	"openeuler.org/PilotGo/atune-plugin/model"
@@ -21,6 +23,21 @@ func QueryResults(query *response.PaginationQ) ([]*model.RunResult, int64, error
 
 func SaveRusult(result *model.RunResult) error {
 	if err := db.MySQL().Create(&result).Error; err != nil {
+		return err
+	}
+	return nil
+}
+func UpdateTaskResultCount(taskId int) error {
+	var successCount int64
+
+	if err := db.MySQL().Model(&model.RunResult{}).Where("task_id = ? AND command_type = ? AND is_success = ?", taskId, "restore", "success").Count(&successCount).Error; err != nil {
+		return err
+	}
+	task := &model.Tasks{
+		UpdateTime:   time.Now().Format("2006-01-02 15:04:05"),
+		SuccessCount: int(successCount),
+	}
+	if err := db.MySQL().Model(&model.Tasks{}).Where("id = ?", taskId).Updates(&task).Error; err != nil {
 		return err
 	}
 	return nil
