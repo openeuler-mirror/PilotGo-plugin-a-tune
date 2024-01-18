@@ -3,7 +3,6 @@ package service
 import (
 	"errors"
 	"strconv"
-	"sync"
 	"time"
 
 	"gitee.com/openeuler/PilotGo/sdk/common"
@@ -16,9 +15,9 @@ import (
 
 const (
 	// 任务状态
-	TaskWaiting = "waiting"
-	TaskRunnig  = "running"
-	TaskEnd     = "ending"
+	TaskWaiting = "等待"
+	TaskRunnig  = "运行中"
+	TaskEnd     = "完成"
 )
 
 func RunTask(dbtaskId int, tuneId int, commands map[int]model.TaskCommand, machine_uuids []string) error {
@@ -28,9 +27,6 @@ func RunTask(dbtaskId int, tuneId int, commands map[int]model.TaskCommand, machi
 
 	// 使用 channel 来通知任务完成
 	taskComplete := make(chan struct{})
-	// 定义成功和失败任务计数器
-	var successCount, failCount int
-	var mu sync.Mutex
 	for _, uuid := range machine_uuids {
 		go func(uuid string) {
 			defer func() {
@@ -39,28 +35,24 @@ func RunTask(dbtaskId int, tuneId int, commands map[int]model.TaskCommand, machi
 
 			isSuccess_prepare, err := runCommandAndProcessResult(dbtaskId, uuid, commands[tuneId].PrepareCommand, CommandTypePrepare)
 			if err != nil || isSuccess_prepare == IsSuccess_fail {
-				mu.Lock()
-				failCount++
-				mu.Unlock()
+				UpdateResultStatusForPrepare(dbtaskId, uuid, CommandTypePrepare, IsSuccess_fail)
 				return
 			}
+			UpdateResultStatus(dbtaskId, uuid, CommandTypePrepare, IsSuccess_success)
+
 			isSuccess_tune, err := runCommandAndProcessResult(dbtaskId, uuid, commands[tuneId].TuneCommand, CommandTypeTune)
 			if err != nil || isSuccess_tune == IsSuccess_fail {
-				mu.Lock()
-				failCount++
-				mu.Unlock()
+				UpdateResultStatusForTune(dbtaskId, uuid, CommandTypeTune, IsSuccess_fail)
 				return
 			}
+			UpdateResultStatus(dbtaskId, uuid, CommandTypeTune, IsSuccess_success)
+
 			isSuccess_restore, err := runCommandAndProcessResult(dbtaskId, uuid, commands[tuneId].RestoreCommand, CommandTypeRestore)
 			if err != nil || isSuccess_restore == IsSuccess_fail {
-				mu.Lock()
-				failCount++
-				mu.Unlock()
+				UpdateResultStatus(dbtaskId, uuid, CommandTypeRestore, IsSuccess_fail)
 				return
 			}
-			mu.Lock()
-			successCount++
-			mu.Unlock()
+			UpdateResultStatus(dbtaskId, uuid, CommandTypeRestore, IsSuccess_success)
 		}(uuid)
 	}
 
@@ -83,7 +75,7 @@ func runCommandAndProcessResult(dbtaskId int, machine_uuid string, cmd string, c
 	b := &common.Batch{
 		MachineUUIDs: []string{machine_uuid},
 	}
-	err := UpdateResultStatus(dbtaskId, machine_uuid, commandType)
+	err := UpdateResultStatusToRunning(dbtaskId, machine_uuid, commandType)
 	if err != nil {
 		logger.Error("%v", err.Error())
 		return "", err
@@ -128,6 +120,7 @@ func SaveTask(task_name string, uuids []string, tuneId int) error {
 		TuneID:     tuneId,
 		TaskStatus: TaskWaiting,
 		CreateTime: time.Now().Format("2006-01-02 15:04:05"),
+		UUIDCount:  len(uuids),
 	}
 
 	taskid, err := dao.SaveTask(task)

@@ -61,7 +61,7 @@ func processResult(dbtaskid int, res *common.CmdResult, commandType string) (str
 	return commandResultStatus, nil
 }
 
-func UpdateResultStatus(dbtaskid int, uuid string, commandType string) error {
+func UpdateResultStatusToRunning(dbtaskid int, uuid string, commandType string) error {
 	result := &model.RunResult{
 		IsSuccess: IsSuccess_running,
 	}
@@ -69,6 +69,59 @@ func UpdateResultStatus(dbtaskid int, uuid string, commandType string) error {
 	err := dao.UpdateResult(dbtaskid, uuid, commandType, result)
 	if err != nil {
 		return errors.New("更新执行任务状态失败：" + err.Error())
+	}
+	return nil
+}
+
+func UpdateResultStatusForPrepare(dbtaskid int, uuid string, commandType string, resultStatus string) error {
+	result := &model.RunResult{
+		IsSuccess: resultStatus,
+	}
+
+	err := dao.UpdateResult(dbtaskid, uuid, commandType, result)
+	if err != nil {
+		return errors.New("更新执行任务状态失败：" + err.Error())
+	}
+
+	err = dao.UpdateResult(dbtaskid, uuid, CommandTypeTune, result)
+	if err != nil {
+		return errors.New("更新执行任务状态失败：" + err.Error())
+	}
+	err = dao.UpdateResult(dbtaskid, uuid, CommandTypeRestore, result)
+	if err != nil {
+		return errors.New("更新执行任务状态失败：" + err.Error())
+	}
+	return nil
+}
+func UpdateResultStatusForTune(dbtaskid int, uuid string, commandType string, resultStatus string) error {
+	result := &model.RunResult{
+		IsSuccess: resultStatus,
+	}
+
+	err := dao.UpdateResult(dbtaskid, uuid, commandType, result)
+	if err != nil {
+		return errors.New("更新执行任务状态失败：" + err.Error())
+	}
+	err = dao.UpdateResult(dbtaskid, uuid, CommandTypeRestore, result)
+	if err != nil {
+		return errors.New("更新执行任务状态失败：" + err.Error())
+	}
+	return nil
+}
+
+func UpdateResultStatus(dbtaskid int, uuid string, commandType string, resultStatus string) error {
+	result := &model.RunResult{
+		IsSuccess: resultStatus,
+	}
+
+	err := dao.UpdateResult(dbtaskid, uuid, commandType, result)
+	if err != nil {
+		return errors.New("更新执行任务状态失败：" + err.Error())
+	}
+	if commandType == CommandTypeRestore {
+		if err := dao.UpdateTaskResultCount(dbtaskid); err != nil {
+			return err
+		}
 	}
 	return nil
 }

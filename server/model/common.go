@@ -27,14 +27,16 @@ type RunResult struct {
 }
 
 type Tasks struct {
-	ID         int         `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
-	TuneID     int         `json:"tune_id"`
-	TaskName   string      `json:"task_name"`
-	TaskStatus string      `json:"task_status"`
-	CreateTime string      `json:"create_time"`
-	UpdateTime string      `json:"update_time"`
-	RunResults []RunResult `gorm:"foreignKey:TaskID;constraint:OnDelete:CASCADE;" json:"results"`
-	Tune       Tunes       `gorm:"foreignKey:TuneID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;" json:"tune"`
+	ID         int    `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
+	TuneID     int    `json:"tune_id"`
+	TaskName   string `json:"task_name"`
+	TaskStatus string `json:"task_status"`
+	CreateTime string `json:"create_time"`
+	UpdateTime string `json:"update_time"`
+	// RunResults []RunResult `gorm:"foreignKey:TaskID;constraint:OnDelete:CASCADE;" json:"results"`
+	Tune         Tunes `gorm:"foreignKey:TuneID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT;" json:"tune"`
+	SuccessCount int   `json:"success_count"`
+	UUIDCount    int   `json:"uuid_count"`
 }
 
 type AtuneClient struct {
