@@ -3,11 +3,13 @@ package service
 import (
 	"errors"
 	"strconv"
+	"time"
 
 	"gitee.com/openeuler/PilotGo/sdk/common"
 	"gitee.com/openeuler/PilotGo/sdk/logger"
 	"openeuler.org/PilotGo/atune-plugin/dao"
 	"openeuler.org/PilotGo/atune-plugin/model"
+	"openeuler.org/PilotGo/atune-plugin/plugin"
 )
 
 const (
@@ -46,7 +48,6 @@ func processResult(dbtaskid int, res *common.CmdResult, commandType string) (str
 		commandResultStatus = IsSuccess_fail
 	}
 	result := &model.RunResult{
-		MachineIP: res.MachineIP,
 		RetCode:   res.RetCode,
 		Stdout:    res.Stdout,
 		Stderr:    res.Stderr,
@@ -63,6 +64,7 @@ func processResult(dbtaskid int, res *common.CmdResult, commandType string) (str
 func UpdateResultStatusToRunning(dbtaskid int, uuid string, commandType string) error {
 	result := &model.RunResult{
 		IsSuccess: IsSuccess_running,
+		StartTime: time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	err := dao.UpdateResult(dbtaskid, uuid, commandType, result)
@@ -75,6 +77,7 @@ func UpdateResultStatusToRunning(dbtaskid int, uuid string, commandType string) 
 func UpdateResultStatusForPrepare(dbtaskid int, uuid string, commandType string, resultStatus string) error {
 	result := &model.RunResult{
 		IsSuccess: resultStatus,
+		EndTime:   time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	err := dao.UpdateResult(dbtaskid, uuid, commandType, result)
@@ -95,6 +98,7 @@ func UpdateResultStatusForPrepare(dbtaskid int, uuid string, commandType string,
 func UpdateResultStatusForTune(dbtaskid int, uuid string, commandType string, resultStatus string) error {
 	result := &model.RunResult{
 		IsSuccess: resultStatus,
+		EndTime:   time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	err := dao.UpdateResult(dbtaskid, uuid, commandType, result)
@@ -111,6 +115,7 @@ func UpdateResultStatusForTune(dbtaskid int, uuid string, commandType string, re
 func UpdateResultStatus(dbtaskid int, uuid string, commandType string, resultStatus string) error {
 	result := &model.RunResult{
 		IsSuccess: resultStatus,
+		EndTime:   time.Now().Format("2006-01-02 15:04:05"),
 	}
 
 	err := dao.UpdateResult(dbtaskid, uuid, commandType, result)
@@ -124,10 +129,31 @@ func UpdateResultStatus(dbtaskid int, uuid string, commandType string, resultSta
 	}
 	return nil
 }
-func SearchResultByTaskId(taskId string) ([]*model.RunResult, error) {
-	if data, err := dao.SearchResult(taskId); err != nil {
-		return nil, err
-	} else {
-		return data, nil
+func SearchResultByTaskId(taskId string) ([]*model.Results, error) {
+	machine_uuids, err := dao.GetResultUUIDByTaskId(taskId)
+	if err != nil || len(machine_uuids) == 0 {
+		return []*model.Results{}, err
 	}
+
+	var results []*model.Results
+	for _, uuid := range machine_uuids {
+		machine_info, err := plugin.GlobalClient.MachineInfoByUUID(uuid)
+		if err != nil {
+			return nil, err
+		}
+		result, err := dao.SearchResult(taskId, uuid)
+		if err != nil {
+			return nil, err
+		}
+		r := &model.Results{
+			TaskID:      taskId,
+			MachineUUID: uuid,
+			MachineIP:   machine_info.IP,
+			CPUArch:     machine_info.CPUArch,
+			OS:          machine_info.OS,
+			Result:      result,
+		}
+		results = append(results, r)
+	}
+	return results, nil
 }

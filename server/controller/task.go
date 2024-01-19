@@ -1,21 +1,29 @@
 package controller
 
 import (
+	"strconv"
+
 	"gitee.com/openeuler/PilotGo/sdk/logger"
 	"gitee.com/openeuler/PilotGo/sdk/response"
 	"github.com/gin-gonic/gin"
+	"openeuler.org/PilotGo/atune-plugin/dao"
 	"openeuler.org/PilotGo/atune-plugin/service"
 )
 
 func StartTask(c *gin.Context) {
 	d := &struct {
-		MachineUUIDs []string `json:"machine_uuids"`
-		TuneID       int      `json:"tune_id"`
-		TaskID       int      `json:"taskId"`
+		TuneID int `json:"tuneId"`
+		TaskID int `json:"taskId"`
 	}{}
 	if err := c.ShouldBind(d); err != nil {
 		logger.Debug("绑定批次参数失败：%s", err)
 		response.Fail(c, nil, "parameter error")
+		return
+	}
+
+	machine_uuids, err := dao.GetResultUUIDByTaskId(strconv.Itoa(d.TaskID))
+	if err != nil || len(machine_uuids) == 0 {
+		response.Fail(c, nil, "未找到相应的机器")
 		return
 	}
 	commands, err := service.GetCommandByID(d.TuneID)
@@ -28,7 +36,7 @@ func StartTask(c *gin.Context) {
 		response.Fail(c, nil, err.Error())
 		return
 	}
-	err = service.RunTask(d.TaskID, d.TuneID, commands, d.MachineUUIDs)
+	err = service.RunTask(d.TaskID, d.TuneID, commands, machine_uuids)
 	if err != nil {
 		response.Fail(c, nil, err.Error())
 		return

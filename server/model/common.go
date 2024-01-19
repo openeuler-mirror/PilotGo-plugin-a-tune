@@ -18,8 +18,9 @@ type RunResult struct {
 	ID          int    `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
 	TaskID      int    `json:"task_id"`
 	MachineUUID string `json:"machine_uuid"`
-	MachineIP   string `json:"machine_ip"`
 	CommandType string `json:"command_type"`
+	StartTime   string `json:"startTime"`
+	EndTime     string `json:"endTime"`
 	RetCode     int    `json:"retcode"`
 	Stdout      string `json:"stdout"`
 	Stderr      string `json:"stderr"`
@@ -43,11 +44,19 @@ type Tasks struct {
 type AtuneClient struct {
 	ID          int    `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
 	MachineUUID string `json:"machine_uuid"`
-	MachineIP   string `json:"machine_ip"`
 }
 
 type TaskCommand struct {
 	PrepareCommand string `json:"prepare"`
 	TuneCommand    string `json:"tune"`
 	RestoreCommand string `json:"restore"`
+}
+
+type Results struct {
+	TaskID      string       `json:"taskId"`
+	MachineUUID string       `json:"machineUUID"`
+	MachineIP   string       `json:"machineIp"`
+	CPUArch     string       `json:"cpuArch"`
+	OS          string       `json:"os"`
+	Result      []*RunResult `json:"result"`
 }

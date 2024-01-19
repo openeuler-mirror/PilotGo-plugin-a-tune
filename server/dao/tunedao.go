@@ -77,3 +77,11 @@ func SearchTune(search string, query *response.PaginationQ) ([]*model.Tunes, int
 	}
 	return tune, total, nil
 }
+
+func QueryTuneMachines() ([]*model.AtuneClient, error) {
+	var ac []*model.AtuneClient
+	if err := db.MySQL().Find(&ac).Error; err != nil {
+		return []*model.AtuneClient{}, err
+	}
+	return ac, nil
+}

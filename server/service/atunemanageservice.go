@@ -23,7 +23,6 @@ const (
 func AtuneManage(res *common.CmdResult, command_type string) error {
 	result := &model.AtuneClient{
 		MachineUUID: res.MachineUUID,
-		MachineIP:   res.MachineIP,
 	}
 	logger.Info("A-Tune客户端安装状态:\n%v", res)
 	ok, err := dao.IsExist(res.MachineUUID)

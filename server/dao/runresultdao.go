@@ -45,11 +45,17 @@ func DeleteResult(resultId int) error {
 	return nil
 }
 
-func SearchResult(taskId string) ([]*model.RunResult, error) {
+func SearchResult(taskId, machine_uuid string) ([]*model.RunResult, error) {
 	var result []*model.RunResult
-	if err := db.MySQL().Where("task_id = ?", taskId).Find(&result).Error; err != nil {
+	if err := db.MySQL().Where("task_id = ? AND machine_uuid = ?", taskId, machine_uuid).Find(&result).Error; err != nil {
 		return []*model.RunResult{}, nil
 	}
 
 	return result, nil
+}
+
+func GetResultUUIDByTaskId(taskId string) ([]string, error) {
+	var uuids []string
+	err := db.MySQL().Model(&model.RunResult{}).Distinct("machine_uuid").Where("task_id = ?", taskId).Pluck("machine_uuid", &uuids).Error
+	return uuids, err
 }
