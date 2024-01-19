@@ -41,13 +41,14 @@ func CreatTask(c *gin.Context) {
 		MachineUUIDs []string `json:"machine_uuids"`
 		TuneID       int      `json:"tune_id"`
 		TaskName     string   `json:"task_name"`
+		Description  string   `json:"description"`
 	}{}
 	if err := c.ShouldBind(d); err != nil {
 		logger.Debug("绑定批次参数失败：%s", err)
 		response.Fail(c, nil, "parameter error")
 		return
 	}
-	err := service.SaveTask(d.TaskName, d.MachineUUIDs, d.TuneID)
+	err := service.SaveTask(d.TaskName, d.Description, d.MachineUUIDs, d.TuneID)
 	if err != nil {
 		response.Fail(c, nil, err.Error())
 		return

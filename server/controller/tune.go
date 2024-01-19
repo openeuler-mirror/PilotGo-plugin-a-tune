@@ -43,6 +43,15 @@ func GetAtuneInfo(c *gin.Context) {
 	response.Success(c, tune, "获取到调优步骤信息")
 }
 
+func QueryTunesNoPaged(c *gin.Context) {
+	data, err := service.QueryTunesNoPaged()
+	if err != nil {
+		response.Fail(c, nil, err.Error())
+		return
+	}
+	response.Success(c, data, "获取到结果详情")
+}
+
 func QueryTunes(c *gin.Context) {
 	query := &response.PaginationQ{}
 	err := c.ShouldBindQuery(query)

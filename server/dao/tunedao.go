@@ -21,6 +21,14 @@ func GetTuneComandById(tune_id int) (map[int]model.TaskCommand, error) {
 	return tuneCommand, nil
 }
 
+func QueryTunesNoPaged() ([]*model.Tunes, error) {
+	var tunes []*model.Tunes
+	if err := db.MySQL().Find(&tunes).Error; err != nil {
+		return []*model.Tunes{}, err
+	}
+	return tunes, nil
+}
+
 func QueryTunes(query *response.PaginationQ) ([]*model.Tunes, int64, error) {
 	var tunes []*model.Tunes
 	if err := db.MySQL().Limit(query.PageSize).Offset((query.Page - 1) * query.PageSize).Find(&tunes).Error; err != nil {
