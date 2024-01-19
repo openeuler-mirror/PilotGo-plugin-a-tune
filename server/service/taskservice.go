@@ -114,13 +114,14 @@ func UpdateTaskStatus(taskId int, taskStatus string) error {
 	}
 	return nil
 }
-func SaveTask(task_name string, uuids []string, tuneId int) error {
+func SaveTask(task_name string, desc string, uuids []string, tuneId int) error {
 	task := &model.Tasks{
-		TaskName:   task_name,
-		TuneID:     tuneId,
-		TaskStatus: TaskWaiting,
-		CreateTime: time.Now().Format("2006-01-02 15:04:05"),
-		UUIDCount:  len(uuids),
+		TaskName:    task_name,
+		Description: desc,
+		TuneID:      tuneId,
+		TaskStatus:  TaskWaiting,
+		CreateTime:  time.Now().Format("2006-01-02 15:04:05"),
+		UUIDCount:   len(uuids),
 	}
 
 	taskid, err := dao.SaveTask(task)
