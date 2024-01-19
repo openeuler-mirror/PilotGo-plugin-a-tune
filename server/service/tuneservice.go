@@ -4,9 +4,11 @@ import (
 	"errors"
 	"time"
 
+	"gitee.com/openeuler/PilotGo/sdk/common"
 	"gitee.com/openeuler/PilotGo/sdk/response"
 	"openeuler.org/PilotGo/atune-plugin/dao"
 	"openeuler.org/PilotGo/atune-plugin/model"
+	"openeuler.org/PilotGo/atune-plugin/plugin"
 )
 
 func GetCommandByID(tune_id int) (map[int]model.TaskCommand, error) {
@@ -91,4 +93,20 @@ func SearchTune(search string, query *response.PaginationQ) ([]*model.Tunes, int
 	} else {
 		return data, int(total), nil
 	}
+}
+
+func QueryTuneMachines() (interface{}, error) {
+	ms, err := dao.QueryTuneMachines()
+	if err != nil || len(ms) == 0 {
+		return []*model.AtuneClient{}, err
+	}
+	var tuneMachines []*common.MachineNode
+	for _, machine := range ms {
+		machine_info, err := plugin.GlobalClient.MachineInfoByUUID(machine.MachineUUID)
+		if err != nil {
+			return nil, err
+		}
+		tuneMachines = append(tuneMachines, machine_info)
+	}
+	return tuneMachines, nil
 }

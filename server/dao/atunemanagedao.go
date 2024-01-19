@@ -19,7 +19,6 @@ func IsExist(uuid string) (bool, error) {
 func AddAtuneClientList(ac *model.AtuneClient) error {
 	a := model.AtuneClient{
 		MachineUUID: ac.MachineUUID,
-		MachineIP:   ac.MachineIP,
 	}
 	err := db.MySQL().Save(&a).Error
 	if err != nil {

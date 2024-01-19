@@ -129,3 +129,12 @@ func SearchTune(c *gin.Context) {
 	}
 	response.DataPagination(c, data, total, query)
 }
+
+func GetTuneMachines(c *gin.Context) {
+	data, err := service.QueryTuneMachines()
+	if err != nil {
+		response.Fail(c, nil, err.Error())
+		return
+	}
+	response.Success(c, data, "获取到可调优机器")
+}
