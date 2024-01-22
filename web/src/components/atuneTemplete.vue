@@ -2,17 +2,8 @@
   <div>
     <el-form :model="form" class="custom-form" :disabled="!isTune">
       <el-form-item label="调优对象" v-show="isTune">
-        <el-select
-          v-model="form.tuneName"
-          placeholder="请选择调优模板"
-          @change="fetchAtuneInfo(form.tuneName)"
-        >
-          <el-option
-            v-for="item in allTune"
-            :key="item"
-            :label="item"
-            :value="item"
-          />
+        <el-select v-model="form.tuneName" placeholder="请选择调优模板" @change="fetchAtuneInfo(form.tuneName)">
+          <el-option v-for="item in allTune" :key="item" :label="item" :value="item" />
         </el-select>
       </el-form-item>
       <el-form-item label="自定义名">
@@ -34,12 +25,7 @@
         <el-input v-model="form.restore"></el-input>
       </el-form-item>
       <el-form-item label="注意事项">
-        <el-input
-          v-model="form.note"
-          class="custom-input"
-          type="textarea"
-          :rows="6"
-        ></el-input>
+        <el-input v-model="form.note" class="custom-input" type="textarea" :rows="6"></el-input>
       </el-form-item>
     </el-form>
     <el-form class="centered-buttons">
@@ -58,7 +44,7 @@ import {
   updateTune,
   getAtuneAllName,
 } from "@/api/atune";
-import { Atune, Task } from "@/types/atune";
+import { Atune } from "@/types/atune";
 import MyButton from "@/components/myButton.vue";
 
 let props = defineProps({
@@ -191,6 +177,7 @@ watchEffect(() => {
     vertical-align: top;
   }
 }
+
 .centered-buttons {
   text-align: center;
 }

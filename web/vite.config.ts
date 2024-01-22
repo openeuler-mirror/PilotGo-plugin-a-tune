@@ -16,7 +16,7 @@ export default defineConfig({
     cors: true,
     proxy: {
       '/plugin/atune': {
-        target: 'http://10.41.107.32:8099',
+        target: 'http://10.44.43.181:8099',
         changeOrigin: true,
         rewrite: (p) => p.replace('/^\/plugin\/atune/', '')
       },
