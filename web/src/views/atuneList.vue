@@ -23,7 +23,8 @@
     </my-table>
   </div>
   <el-dialog :title="title" :width="width" v-model="showDialog">
-    <atuneTemplete v-if="type === 'edit'" :is-tune="true" :selectedEditRow="selectedEditRow" @closeDialog="closeDialog">
+    <atuneTemplete v-if="type === 'edit'" :is-tune="true" :is-update="isUpdate" :selectedEditRow="selectedEditRow"
+      @closeDialog="closeDialog" @refresh-data="handleRefresh">
     </atuneTemplete>
     <tuneDetail v-if="type === 'detail'" :selectedEditRow="selectedEditRow" @closeDialog="closeDialog" />
   </el-dialog>
@@ -41,6 +42,7 @@ const selectedEditRow = ref({} as Atune);
 const type = ref(''); // 弹窗类型
 const title = ref('调优模板信息');
 const width = ref('50%')
+const isUpdate = ref(false)
 
 // 关闭dialog弹框
 const closeDialog = () => {
@@ -50,11 +52,16 @@ const closeDialog = () => {
 const handleCreat = () => {
   showDialog.value = true;
   type.value = 'edit';
+  isUpdate.value = false;
 };
 // 删除
 const handleDelete = () => {
   tuneRef.value.handleDelete();
 };
+// 刷新
+const handleRefresh = () => {
+  tuneRef.value.handleRefresh();
+}
 // 详情
 const handleDetail = (row: Atune) => {
   showDialog.value = true;
@@ -68,6 +75,7 @@ const handleEdit = (row: Atune) => {
   selectedEditRow.value = row;
   showDialog.value = true;
   type.value = 'edit';
+  isUpdate.value = true;
   title.value = row.custom_name + '信息';
 };
 </script>
