@@ -1,12 +1,7 @@
 <template>
-  <div class="tuneList shadow" v-if="!showDetail">
-    <my-table
-      ref="tuneRef"
-      :get-data="getTuneLists"
-      :get-all-data="getTuneLists"
-      :del-func="deleteTune"
-      :search-func="searchTune"
-    >
+  <div class="tuneList shadow">
+    <my-table ref="tuneRef" :get-data="getTuneLists" :get-all-data="getTuneLists" :del-func="deleteTune"
+      :search-func="searchTune">
       <template #listName>模板列表</template>
       <template #button_bar>
         <my-button @click="handleCreat">新增</my-button>
@@ -27,44 +22,25 @@
       </el-table-column>
     </my-table>
   </div>
-  <el-dialog title="调优模板信息" width="70%" v-model="showDialog">
-    <atuneTemplete
-      :is-tune="true"
-      :selectedEditRow="selectedEditRow"
-      @closeDialog="closeDialog"
-    >
+  <el-dialog :title="title" :width="width" v-model="showDialog">
+    <atuneTemplete v-if="type === 'edit'" :is-tune="true" :selectedEditRow="selectedEditRow" @closeDialog="closeDialog">
     </atuneTemplete>
+    <tuneDetail v-if="type === 'detail'" :selectedEditRow="selectedEditRow" @closeDialog="closeDialog" />
   </el-dialog>
-  <div class="tuneList shadow">
-    <router-view />
-  </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
-import { ElDialog } from "element-plus";
+import { ref } from "vue";
 import { getTuneLists, searchTune, deleteTune } from "@/api/atune";
 import atuneTemplete from "@/components/atuneTemplete.vue";
 import { Atune } from "@/types/atune";
-import { useRouter, useRoute } from "vue-router";
-import { onBeforeRouteUpdate } from "vue-router";
-import { useRouterStore } from "@/store/router";
-import { useAtuneStore } from "@/store/atune";
+import tuneDetail from "./atuneDetail.vue"
 const tuneRef = ref();
-const router = useRouter();
-const showDetail = ref(false);
 const showDialog = ref(false);
-const selectedEditRow = ref();
-
-// 每次刷新界面都需重新判断路由
-onMounted(() => {
-  showDetail.value = useRouterStore().showRoute(useRoute().fullPath, "detail");
-});
-// 组件内守卫
-onBeforeRouteUpdate((to: any, _from: any, next: any) => {
-  showDetail.value = useRouterStore().showRoute(to.fullPath, "detail");
-  next();
-});
+const selectedEditRow = ref({} as Atune);
+const type = ref(''); // 弹窗类型
+const title = ref('调优模板信息');
+const width = ref('50%')
 
 // 关闭dialog弹框
 const closeDialog = () => {
@@ -73,6 +49,7 @@ const closeDialog = () => {
 // 新增
 const handleCreat = () => {
   showDialog.value = true;
+  type.value = 'edit';
 };
 // 删除
 const handleDelete = () => {
@@ -80,14 +57,18 @@ const handleDelete = () => {
 };
 // 详情
 const handleDetail = (row: Atune) => {
-  useAtuneStore().setTuneRow(row);
-  showDetail.value = true;
-  router.push("/atune/detail");
+  showDialog.value = true;
+  selectedEditRow.value = row;
+  type.value = 'detail';
+  title.value = row.custom_name + '详情';
+  width.value = '70%';
 };
 // 编辑
 const handleEdit = (row: Atune) => {
   selectedEditRow.value = row;
   showDialog.value = true;
+  type.value = 'edit';
+  title.value = row.custom_name + '信息';
 };
 </script>
 

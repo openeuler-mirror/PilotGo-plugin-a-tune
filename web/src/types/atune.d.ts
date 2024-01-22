@@ -1,5 +1,7 @@
 export interface Task {
   id: number;
+  uuid_count: number;
+  success_count: number;
   task_name: string;
   command: string;
   task_status: string;
@@ -8,6 +10,8 @@ export interface Task {
   results: Array;
   tune_id: int;
   tune: Atune;
+  machine_uuids: Array[string];
+  description: string;
 }
 
 export interface Atune {
@@ -43,13 +47,13 @@ export type AtuneArray = Atune[];
 // *接口api返回结果约束不含data
 export interface Result {
   code: number;
-  msg: string;
+  msg?: string;
 }
 
 // *接口api返回结果含有page信息
-export interface ReaultData<T = any> extends Result {
-  data: Task[] | Atune[];
-  ok?: string;
+export interface ResultData extends Result {
+  data: Array;
+  ok?: Boolean;
   page: number;
   size: number;
   total: number;

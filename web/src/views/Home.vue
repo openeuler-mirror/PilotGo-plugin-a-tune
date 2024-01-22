@@ -8,19 +8,14 @@
   </div>
 
   <!-- 调优模板详情 -->
-  <el-dialog title="调优模板信息" width="70%" v-model="showDialog">
-    <atuneTemplete
-      :is-tune="false"
-      :selectedEditRow="selectedEditRow"
-      @closeDialog="closeDialog"
-    >
+  <el-dialog title="调优模板信息" width="50%" v-model="showDialog">
+    <atuneTemplete :is-tune="false" :selectedEditRow="selectedEditRow" @closeDialog="closeDialog">
     </atuneTemplete>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import { ElDialog } from "element-plus";
 import taskList from "./taskList.vue";
 import atuneTemplete from "@/components/atuneTemplete.vue";
 import { Task, Atune } from "@/types/atune";
@@ -37,13 +32,14 @@ onMounted(() => {
   showDetail.value = useRouterStore().showRoute(useRoute().fullPath, "detail");
 });
 // 组件内守卫
-onBeforeRouteUpdate((to: any, _from: any, next: any) => {
+onBeforeRouteUpdate((to: { fullPath: string;[propName: string]: any; }, _from: {}, next: Function) => {
   showDetail.value = useRouterStore().showRoute(to.fullPath, "detail");
   next();
 });
 
 // 关闭dialog弹框
 const closeDialog = () => {
+
   showDialog.value = false;
 };
 

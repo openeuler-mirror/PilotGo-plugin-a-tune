@@ -1,24 +1,14 @@
 <template>
   <div class="app">
     <div class="top">
-      <span class="top-title">A-Tune调优管理</span>
+      <!-- <span class="top-title">A-Tune调优管理</span> -->
       <div class="nav">
         <!-- 两页 任务列表、调优模板列表 -->
-        <router-link
-          class="nav-link shadow"
-          to="/task"
-          :active-class="'active'"
-        >
-          任务</router-link
-        >
+        <router-link class="nav-link shadow" to="/task" :active-class="'active'">
+          任务</router-link>
         <el-divider direction="vertical" />
-        <router-link
-          class="nav-link shadow"
-          to="/atune"
-          :active-class="'active'"
-        >
-          模板</router-link
-        >
+        <router-link class="nav-link shadow" to="/atune" :active-class="'active'">
+          模板</router-link>
       </div>
     </div>
 
@@ -58,6 +48,7 @@ const zhCn = ref(locale);
       display: inline-block;
     }
   }
+
   .nav {
     position: absolute;
     z-index: 100;
@@ -66,6 +57,7 @@ const zhCn = ref(locale);
     display: flex;
     justify-content: space-around;
     align-items: center;
+
     &-link {
       display: inline-block;
       width: 44%;
@@ -75,11 +67,13 @@ const zhCn = ref(locale);
       border-radius: 6px;
       font-weight: bold;
       background-color: #fff;
+
       &:hover {
         background-color: rgba(96, 122, 207, 0.4);
         color: #fff;
       }
     }
+
     .active {
       color: #fff;
       background-color: rgb(96, 122, 207);

@@ -18,10 +18,27 @@ export function searchTask(data: object) {
   });
 }
 
+// 获取所有机器
+export function getAllMachine() {
+  return request({
+    url: "/plugin/atune/tune_machine",
+    method: "get",
+  });
+}
+
 // 新增任务
 export function addTask(data: object) {
   return request({
-    url: "/plugin/atune/run",
+    url: "/plugin/atune/task_new",
+    method: "post",
+    data,
+  });
+}
+
+// 执行任务
+export function startTask(data: object) {
+  return request({
+    url: "/plugin/atune/task_run",
     method: "post",
     data,
   });
@@ -36,10 +53,18 @@ export function deleteTask(data: object) {
   });
 }
 
-// 获取所有的调优列表
+// 获取所有的调优列表名称 Array[string]
 export function getAtuneAllName() {
   return request({
     url: "/plugin/atune/all",
+    method: "get",
+  });
+}
+
+// 获取所有的调优列表 Array[Atune]
+export function getAtuneAllList() {
+  return request({
+    url: "/plugin/atune/tunes_noPaged",
     method: "get",
   });
 }
