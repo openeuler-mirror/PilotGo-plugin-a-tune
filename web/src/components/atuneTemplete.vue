@@ -53,6 +53,11 @@ let props = defineProps({
     default: false,
     required: true,
   },
+  isUpdate: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
   selectedEditRow: {
     type: Object as () => Atune,
     default: null,
@@ -70,7 +75,7 @@ const form = reactive({
   restore: "",
   note: "",
 });
-const emit = defineEmits(["closeDialog"]);
+const emit = defineEmits(["closeDialog", "refreshData"]);
 // 获取所有的调优模板
 const getAllTune = () => {
   getAtuneAllName().then((res) => {
@@ -116,6 +121,7 @@ const saveTuneData = () => {
   saveTune(form)
     .then((res) => {
       if (res.data.code === 200) {
+        emit('refreshData')
         ElMessage.success(res.data.msg);
       } else {
         ElMessage.error(res.data.msg);
@@ -129,6 +135,7 @@ const updateTuneData = () => {
   updateTune(form)
     .then((res) => {
       if (res.data.code === 200) {
+        emit('refreshData')
         ElMessage.success(res.data.msg);
       } else {
         ElMessage.error(res.data.msg);
@@ -141,7 +148,7 @@ const updateTuneData = () => {
 
 const onSubmit = () => {
   emit("closeDialog");
-  if (form.id === 0) {
+  if (!props.isUpdate) {
     saveTuneData();
   } else {
     updateTuneData();
