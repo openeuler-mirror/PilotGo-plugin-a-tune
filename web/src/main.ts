@@ -8,16 +8,16 @@ import MyButton from "@/components/myButton.vue";
 import { ElDialog } from "element-plus";
 import "element-plus/dist/index.css";
 import router from "./router";
-import { createPinia } from "pinia";
+import pinia from '@/store'
 
 const app = createApp(App);
 // 设置全局变量
-// app.config.globalProperties.$router = router;
+// app.config.globalProperties.echarts = echarts;
 app.component("el-dialog", ElDialog);
 app.component("my-table", MyTable);
 app.component("my-button", MyButton);
 
-app.use(createPinia());
+app.use(pinia);
 app.use(router);
 app.use(ElementPlus);
 
