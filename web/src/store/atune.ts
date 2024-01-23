@@ -12,4 +12,5 @@ export const useAtuneStore = defineStore("atune", {
     },
 
   },
+  persist: true
 });
