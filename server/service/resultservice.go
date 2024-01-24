@@ -42,15 +42,14 @@ func DeleteResult(resultId []int) error {
 
 func processResult(dbtaskid int, res *common.CmdResult, commandType string) (string, error) {
 	var commandResultStatus string
-	if res.Stderr == "" && len(res.Stdout) != 0 {
+	if res.RetCode == 0 {
 		commandResultStatus = IsSuccess_success
 	} else {
 		commandResultStatus = IsSuccess_fail
 	}
 	result := &model.RunResult{
 		RetCode:   res.RetCode,
-		Stdout:    res.Stdout,
-		Stderr:    res.Stderr,
+		Stdout:    res.Stdout + res.Stderr,
 		IsSuccess: commandResultStatus,
 	}
 

@@ -23,7 +23,6 @@ type RunResult struct {
 	EndTime     string `json:"endTime"`
 	RetCode     int    `json:"retcode"`
 	Stdout      string `json:"stdout"`
-	Stderr      string `json:"stderr"`
 	IsSuccess   string `json:"is_success"`
 }
 
