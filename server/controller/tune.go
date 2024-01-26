@@ -76,6 +76,11 @@ func SaveTune(c *gin.Context) {
 		return
 	}
 
+	authToken := c.Request.Header.Get("Admin-Token")
+	if err := service.Upload(authToken, "./template/tar", t.TuneName+".tar.gz"); err != nil {
+		response.Fail(c, nil, err.Error())
+		return
+	}
 	if err := service.SaveTune(t); err != nil {
 		response.Fail(c, nil, err.Error())
 		return

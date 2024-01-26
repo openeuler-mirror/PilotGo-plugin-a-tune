@@ -27,19 +27,6 @@ const (
 	CommandTypeRestore = "restore"
 )
 
-func DeleteResult(resultId []int) error {
-	if len(resultId) == 0 {
-		return errors.New("请输入删除的ID")
-	}
-
-	for _, rid := range resultId {
-		if err := dao.DeleteResult(rid); err != nil {
-			logger.Error("%v", strconv.Itoa(rid)+"未删除成功")
-		}
-	}
-	return nil
-}
-
 func processResult(dbtaskid int, res *common.CmdResult, commandType string) (string, error) {
 	var commandResultStatus string
 	if res.RetCode == 0 {
@@ -58,6 +45,19 @@ func processResult(dbtaskid int, res *common.CmdResult, commandType string) (str
 	}
 
 	return commandResultStatus, nil
+}
+
+func DeleteResult(resultId []int) error {
+	if len(resultId) == 0 {
+		return errors.New("请输入删除的ID")
+	}
+
+	for _, rid := range resultId {
+		if err := dao.DeleteResult(rid); err != nil {
+			logger.Error("%v", strconv.Itoa(rid)+"未删除成功")
+		}
+	}
+	return nil
 }
 
 func UpdateResultStatusToRunning(dbtaskid int, uuid string, commandType string) error {

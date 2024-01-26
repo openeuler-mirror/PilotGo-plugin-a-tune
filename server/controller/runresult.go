@@ -32,3 +32,15 @@ func DeleteResult(c *gin.Context) {
 	}
 	response.Success(c, nil, "已删除")
 }
+
+func QueryTuneResults(c *gin.Context) {
+	taskId := c.Query("taskId")
+	machine_uuid := c.Query("uuid")
+
+	data, err := service.GetResultAnalisis(taskId, machine_uuid)
+	if err != nil {
+		response.Fail(c, nil, err.Error())
+		return
+	}
+	response.Success(c, data, "获取到调优分析详情")
+}

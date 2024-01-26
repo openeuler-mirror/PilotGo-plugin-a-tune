@@ -59,3 +59,22 @@ type Results struct {
 	OS          string       `json:"os"`
 	Result      []*RunResult `json:"result"`
 }
+
+// TuningIteration 是用于存储每次迭代结果的结构体
+type TuningIterResult struct {
+	TuningStep             string      `json:"step"`
+	RecommandParameters    interface{} `json:"recommand_parameters"`
+	EvaluationValue        interface{} `json:"evaluation_value"`
+	PerformanceImprovement string      `json:"performance_improvement"`
+}
+
+// TuningResult 是用于存储调优结果的结构体
+type TuningResults struct {
+	ID                      int    `gorm:"primary_key;AUTO_INCREMENT" json:"id"`
+	TaskID                  int    `json:"task_id"`
+	MachineUUID             string `json:"machine_uuid"`
+	TuningResult            string `json:"tuning_result"`
+	FinalOptimizationResult string `json:"final_optimization_result"`
+	FinalEvaluationValue    string `json:"final_evaluation_value"`
+	BaselinePerformance     string `json:"baseline_performance"`
+}

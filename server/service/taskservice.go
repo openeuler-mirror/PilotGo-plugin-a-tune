@@ -53,6 +53,7 @@ func RunTask(dbtaskId int, tuneId int, commands map[int]model.TaskCommand, machi
 				return
 			}
 			UpdateResultStatus(dbtaskId, uuid, CommandTypeRestore, IsSuccess_success)
+			ResultAnalysis(dbtaskId, uuid)
 		}(uuid)
 	}
 

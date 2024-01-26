@@ -59,3 +59,9 @@ func GetResultUUIDByTaskId(taskId string) ([]string, error) {
 	err := db.MySQL().Model(&model.RunResult{}).Distinct("machine_uuid").Where("task_id = ?", taskId).Pluck("machine_uuid", &uuids).Error
 	return uuids, err
 }
+
+func GetResultByTaskIdAndUUID(taskId int, machine_uuid string, commandType string) (string, error) {
+	var r model.RunResult
+	err := db.MySQL().Where("task_id = ? AND machine_uuid = ? AND command_type = ?", taskId, machine_uuid, commandType).Find(&r).Error
+	return r.Stdout, err
+}
