@@ -45,6 +45,7 @@ func MysqldbInit(conf *config.MysqlDBInfo) error {
 	MySQL().AutoMigrate(&model.RunResult{})
 	MySQL().AutoMigrate(&model.Tasks{})
 	MySQL().AutoMigrate(&model.AtuneClient{})
+	MySQL().AutoMigrate(&model.TuningResults{})
 
 	return nil
 }
