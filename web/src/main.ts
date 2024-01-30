@@ -1,5 +1,4 @@
 import "./assets/main.css";
-
 import { createApp } from "vue";
 import App from "./App.vue";
 import ElementPlus from "element-plus";
@@ -11,8 +10,6 @@ import router from "./router";
 import pinia from '@/store'
 
 const app = createApp(App);
-// 设置全局变量
-// app.config.globalProperties.echarts = echarts;
 app.component("el-dialog", ElDialog);
 app.component("my-table", MyTable);
 app.component("my-button", MyButton);

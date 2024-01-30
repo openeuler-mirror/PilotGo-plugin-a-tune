@@ -67,7 +67,7 @@ import { getTaskLists, searchTask, deleteTask, getAtuneAllName, startTask } from
 import { Task, ResultData } from "@/types/atune";
 import { useRouter } from "vue-router";
 import { useAtuneStore } from "@/store/atune";
-import taskForm from "./taskForm.vue"
+import taskForm from "@/views/task/taskForm.vue"
 import { TableColumnCtx } from "element-plus";
 
 const taskRef = ref();

@@ -8,14 +8,8 @@
       <div class="my_table_header_operation">
         <!-- 模糊搜索 -->
         <div class="operation-select-input">
-          <el-input
-            v-model="keyWord"
-            placeholder="请输入关键词进行搜索..."
-            :prefix-icon="Search"
-            clearable
-            @keydown.enter.native="handleSearch"
-            @clear="handleRefresh"
-          ></el-input>
+          <el-input v-model="keyWord" placeholder="请输入关键词进行搜索..." :prefix-icon="Search" clearable
+            @keydown.enter.native="handleSearch" @clear="handleRefresh"></el-input>
         </div>
       </div>
       <div class="my_table_header_button">
@@ -24,14 +18,8 @@
     </el-row>
     <!-- 列表 -->
     <div class="my_table_content" ref="tableBox">
-      <el-table
-        ref="myTableRef"
-        :data="tableData"
-        class="table"
-        @select="handleRowSelectionChange"
-        @selection-change="handleSelectinChange"
-        v-loading="loading"
-      >
+      <el-table ref="myTableRef" :data="tableData" class="table" @select="handleRowSelectionChange"
+        @selection-change="handleSelectinChange" v-loading="loading">
         <slot></slot>
         <template #append>
           <slot name="append"></slot>
@@ -43,27 +31,20 @@
     </div>
     <!-- 分页 -->
     <div class="my_table_page">
-      <el-pagination
-        v-model:current-page="page.currentPage"
-        v-model:page-size="page.pageSize"
-        popper-class="pagePopper"
-        :page-sizes="[10, 20, 25, 50, 75, 100]"
-        :small="page.small"
-        :background="page.background"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-        @size-change="getTableData"
-        @current-change="getTableData"
-      />
+      <el-pagination v-model:current-page="page.currentPage" v-model:page-size="page.pageSize" popper-class="pagePopper"
+        :page-sizes="[10, 20, 25, 50, 75, 100]" :small="page.small" :background="page.background"
+        layout="total, sizes, prev, pager, next, jumper" :total="page.total" @size-change="getTableData"
+        @current-change="getTableData" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, AppContext } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import { ElTable, ElMessage, ElMessageBox } from "element-plus";
-import { ReaultData } from "@/types/atune";
+import { ResultData } from "@/types/atune";
+import { Task, Atune } from "@/types/atune";
 const props = defineProps({
   getData: {
     type: Function,
@@ -84,12 +65,12 @@ const props = defineProps({
 });
 const emit = defineEmits(["handleSelect", "handleRowclick"]);
 const loading = ref(false);
-const tableData = ref([] as any[]);
+const tableData = ref([] as Task[] | Atune[]);
 const all_datas = ref([]);
 const myTableRef = ref<InstanceType<typeof ElTable>>();
 const currentNum = ref(0); //复选框当前页数量
 const keyWord = ref("");
-const selectedRows = ref([] as any[]);
+const selectedRows = ref([] as Task[] | Atune[]);
 const page = reactive({
   total: 0,
   currentPage: 1,
@@ -106,8 +87,8 @@ onMounted(async () => {
 const getTableData = () => {
   loading.value = true;
   props.getData!({ page: page.currentPage, size: page.pageSize }).then(
-    (res: { data: ReaultData }) => {
-      let result: ReaultData = res.data;
+    (res: { data: ResultData }) => {
+      let result: ResultData = res.data;
       if (result && result.code === 200) {
         loading.value = false;
         tableData.value = result.data;
@@ -131,13 +112,13 @@ const handleSearch = () => {
       size: page.pageSize,
       search: keyWord.value,
     })
-    .then((res: any) => {
+    .then((res: { data: ResultData }) => {
       loading.value = false;
       tableData.value = res.data.data;
       currentNum.value = res.data.data.length;
       page.total = res.data.total;
     })
-    .catch((error: any) => {
+    .catch((error: { data: ResultData }) => {
       console.error("Error search data:", error);
     });
 };
@@ -145,7 +126,7 @@ const handleSearch = () => {
 // 获取全部不分页数据
 const getAllData = () => {
   all_datas.value = [];
-  props.getAllData({ paged: "false" }).then((res: any) => {
+  props.getAllData({ paged: "false" }).then((res: { data: ResultData }) => {
     if (res.data && res.data.code === 200) {
       all_datas.value = res.data.data;
     }
@@ -153,12 +134,12 @@ const getAllData = () => {
 };
 
 // 表格被选择数据发生变化
-const handleSelectinChange = (rows: any) => {
+const handleSelectinChange = (rows: Task[] | Atune[]) => {
   selectedRows.value = rows;
 };
 
 // 用户点击某一行的复选框
-const handleRowSelectionChange = (val: [], _row: any) => {
+const handleRowSelectionChange = (val: [], _row: Task[] | Atune[]) => {
   // 输出当前选中的所有行数组
   console.log(val);
 };
@@ -183,7 +164,7 @@ const handleDelete = () => {
       ids.value.push(item.id);
     });
     props.delFunc!({ ids: ids.value })
-      .then((res: any) => {
+      .then((res: { data: ResultData }) => {
         if (res.data.code === 200) {
           ElMessage.success(res.data.msg);
           handleRefresh();
@@ -192,7 +173,7 @@ const handleDelete = () => {
         }
       })
       .catch((err: any) => {
-        ElMessage.error("数据传输失败，请检查：", err);
+        ElMessage.error("数据传输失败", err);
       });
   });
 };
@@ -262,6 +243,7 @@ defineExpose({
 
   &_page {
     height: 30px;
+    padding: 0 4px;
     display: flex;
     justify-content: flex-end;
   }
