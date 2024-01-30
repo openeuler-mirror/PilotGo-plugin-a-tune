@@ -1,17 +1,5 @@
 <template>
   <div class="app">
-    <div class="top">
-      <!-- <span class="top-title">A-Tune调优管理</span> -->
-      <div class="nav">
-        <!-- 两页 任务列表、调优模板列表 -->
-        <router-link class="nav-link shadow" to="/task" :active-class="'active'">
-          任务</router-link>
-        <el-divider direction="vertical" />
-        <router-link class="nav-link shadow" to="/atune" :active-class="'active'">
-          模板</router-link>
-      </div>
-    </div>
-
     <el-config-provider :locale="zhCn">
       <router-view></router-view>
     </el-config-provider>
