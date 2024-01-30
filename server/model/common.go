@@ -65,7 +65,7 @@ type TuningIterResult struct {
 	TuningStep             string      `json:"step"`
 	RecommandParameters    interface{} `json:"recommand_parameters"`
 	EvaluationValue        interface{} `json:"evaluation_value"`
-	PerformanceImprovement string      `json:"performance_improvement"`
+	PerformanceImprovement interface{} `json:"performance_improvement"`
 }
 
 // TuningResult 是用于存储调优结果的结构体

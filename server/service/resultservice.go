@@ -22,9 +22,9 @@ const (
 
 const (
 	// 命令类型
-	CommandTypePrepare = "prepare"
-	CommandTypeTune    = "tune"
-	CommandTypeRestore = "restore"
+	CommandTypePrepare = "环境准备"
+	CommandTypeTune    = "调优"
+	CommandTypeRestore = "环境恢复"
 )
 
 func processResult(dbtaskid int, res *common.CmdResult, commandType string) (string, error) {
