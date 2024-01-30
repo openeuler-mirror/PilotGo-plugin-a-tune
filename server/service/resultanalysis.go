@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"gitee.com/openeuler/PilotGo/sdk/logger"
@@ -48,7 +49,11 @@ func ResultAnalysis(taskId int, machine_uuid string) error {
 				// 本轮评估值
 				iterResult.EvaluationValue = extractKeyValue(m[1])
 				// 性能提升
-				iterResult.PerformanceImprovement = m[2]
+				percentage, err := strconv.ParseFloat(strings.TrimRight(m[2], "%"), 64)
+				if err != nil {
+					logger.Error("无法将字符串转换为浮点数:%v", err)
+				}
+				iterResult.PerformanceImprovement = percentage
 				iterResults = append(iterResults, iterResult)
 			}
 		} else if strings.Contains(line, "The final optimization result") {
@@ -83,8 +88,14 @@ func ResultAnalysis(taskId int, machine_uuid string) error {
 		FinalEvaluationValue:    jsonToString(finalEvaluationValue),
 		BaselinePerformance:     jsonToString(baselinePerformance),
 	}
-	if err = dao.SaveResultAnalysis(tuningResult); err != nil {
-		return err
+	if ok, err := dao.IsExistResultAnalisis(taskId, machine_uuid); ok && err == nil {
+		if err := dao.UpdateResultAnalysis(taskId, machine_uuid, tuningResult); err != nil {
+			return err
+		}
+	} else if !ok && err == nil {
+		if err = dao.SaveResultAnalysis(tuningResult); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -107,7 +118,7 @@ func GetResultAnalisis(taskId, machine_uuid string) (interface{}, error) {
 
 func extractKeyValue(input string) map[string]string {
 	result := make(map[string]string)
-	re := regexp.MustCompile(`(\w+)=(\w+)`)
+	re := regexp.MustCompile(`(\w+)=([\w.]+)`)
 	matches := re.FindAllStringSubmatch(input, -1)
 	for _, match := range matches {
 		result[match[1]] = match[2]

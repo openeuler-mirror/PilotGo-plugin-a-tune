@@ -11,7 +11,7 @@ import (
 func GetAtuneAll(c *gin.Context) {
 	allData := []string{
 		"compress",
-		"compress_Except",
+		"compress_Except_example",
 		"ffmpeg",
 		"fio",
 		"gcc_compile",

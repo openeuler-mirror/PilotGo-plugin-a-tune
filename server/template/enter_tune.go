@@ -4,7 +4,7 @@ import "openeuler.org/PilotGo/atune-plugin/template/tune"
 
 const (
 	Compress                   = "compress"
-	CompressExcept             = "compress_Except"
+	CompressExcept             = "compress_Except_example"
 	Ffmpeg                     = "ffmpeg"
 	Fio                        = "fio"
 	GccCompile                 = "gcc_compile"
