@@ -16,13 +16,13 @@ export default defineConfig({
     cors: true,
     proxy: {
       '/plugin/atune': {
-        target: 'http://10.44.43.181:8099',
+        target: 'http://localhost:8099',
         changeOrigin: true,
         rewrite: (p) => p.replace('/^\/plugin\/atune/', '')
       },
     },
   },
-  // base: '/plugin/atune/',
+  base: '/plugin/atune/',
   build: {
     outDir: 'dist',
     assetsDir: 'static/', //指定静态资源存放路径

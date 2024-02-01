@@ -21,13 +21,13 @@ func AddExtentions() {
 	}
 	pe1 := &common.PageExtention{
 		Type:       common.ExtentionPage,
-		Name:       "plugin-atune",
+		Name:       "任务列表",
 		URL:        "/plugin/atune/task",
 		Permission: "plugin.prometheus.page/menu",
 	}
 	pe2 := &common.PageExtention{
 		Type:       common.ExtentionPage,
-		Name:       "plugin-atune",
+		Name:       "调优模板",
 		URL:        "/plugin/atune/template",
 		Permission: "plugin.prometheus.page/menu",
 	}
