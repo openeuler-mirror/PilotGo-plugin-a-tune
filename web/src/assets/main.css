@@ -23,3 +23,6 @@ html,body {
   display: flex;
   align-items: center;
 }
+:root {
+  --active-color:rgb(241, 139, 14);
+}

@@ -154,6 +154,7 @@ const handleRefresh = () => {
 
 // 删除
 const handleDelete = () => {
+  if (selectedRows.value.length == 0) return;
   ElMessageBox.confirm("确定要删除吗？", "提示", {
     type: "warning",
     confirmButtonText: "确定",
@@ -197,7 +198,7 @@ defineExpose({
     width: 100%;
     height: 44px;
     padding: 0 6px;
-    background-color: rgba(96, 122, 207, 0.9);
+    background: linear-gradient(to right, rgb(11, 35, 117) 0%, rgb(96, 122, 207) 100%, );
     color: #fff;
     display: flex;
     align-items: center;
