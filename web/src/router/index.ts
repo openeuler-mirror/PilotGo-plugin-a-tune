@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import Home from "@/views/Home.vue";
 import Atune from "@/views/atuneList.vue";
@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
-    path: "/atune",
+    path: "/template",
     component: Atune,
     meta: { title: "模板列表" },
     children: [
@@ -33,15 +33,10 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
-  {
-    path: "/result",
-    component: Result,
-    meta: { title: "结果展示" },
-  },
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(window.__MICRO_APP_BASE_ROUTE__ || '/'),
   routes,
 });
 

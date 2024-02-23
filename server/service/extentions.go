@@ -22,13 +22,13 @@ func AddExtentions() {
 	pe1 := &common.PageExtention{
 		Type:       common.ExtentionPage,
 		Name:       "任务列表",
-		URL:        "/plugin/atune/task",
+		URL:        "/task",
 		Permission: "plugin.prometheus.page/menu",
 	}
 	pe2 := &common.PageExtention{
 		Type:       common.ExtentionPage,
 		Name:       "调优模板",
-		URL:        "/plugin/atune/template",
+		URL:        "/template",
 		Permission: "plugin.prometheus.page/menu",
 	}
 	ex = append(ex, me1, me2, pe1, pe2)
