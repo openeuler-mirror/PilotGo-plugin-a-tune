@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 import Home from "@/views/Home.vue";
 import Atune from "@/views/atuneList.vue";
-import Result from "@/views/ResultInfo.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -34,7 +33,6 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
 ];
-
 const router = createRouter({
   history: createWebHistory(window.__MICRO_APP_BASE_ROUTE__ || '/'),
   routes,

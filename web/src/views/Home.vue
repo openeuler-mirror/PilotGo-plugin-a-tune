@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 任务列表 -->
-    <div class="container-table shadow" v-show="!showDetail">
+    <div class="container-table" v-show="!showDetail">
       <taskList @atuneDetail="handleAtuneDetail"> </taskList>
     </div>
     <router-view />

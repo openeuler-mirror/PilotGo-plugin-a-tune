@@ -1,11 +1,8 @@
 <template>
-  <div class="task_nav">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item :to="{ path: '/task' }">任务列表</el-breadcrumb-item>
-      <el-breadcrumb-item>{{ taskItem.task_name }}</el-breadcrumb-item>
-    </el-breadcrumb>
-  </div>
-  <div class="task_detail shadow">
+  <div class="task_detail">
+    <el-icon class="task_detail_back" size="20" @click="() => router.back()">
+      <Back />
+    </el-icon>
     <el-descriptions :column="1">
       <el-descriptions-item label="任务名称：">
         {{ taskItem.task_name }}</el-descriptions-item>
@@ -62,10 +59,11 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref, toRefs, watchEffect } from "vue";
 import { getTaskDetail } from "@/api/result";
-import { MoreFilled, Monitor, Check, Close, Loading } from '@element-plus/icons-vue'
+import { MoreFilled, Monitor, Check, Close, Loading, Back } from '@element-plus/icons-vue'
 import { ResultData, } from "@/types/atune";
 import { useAtuneStore } from "@/store/atune";
 import tuneResult from "./task/tuneResult.vue";
+import router from "@/router";
 
 interface MacItem {
   taskId: number;
@@ -88,7 +86,6 @@ const drawer = ref(false);
 const stepDrawer = ref(false);
 const stepCommand = ref('');
 const currentUuid = ref('');
-
 
 onMounted(() => {
   getDetail();
@@ -156,12 +153,6 @@ watchEffect(() => {
 
 </script>
 <style lang="less" scope>
-.task_nav {
-  width: 98%;
-  height: 20px;
-  text-align: left;
-}
-
 .task_detail {
   width: 98%;
   height: calc(100% - 20px);
@@ -169,6 +160,14 @@ watchEffect(() => {
   margin: 0 auto;
   background-color: #fff;
   border-radius: 6px;
+
+  &_back {
+    cursor: pointer;
+
+    &:hover {
+      color: var(--active-color)
+    }
+  }
 
 
   .mac {
