@@ -16,8 +16,8 @@ const (
 	CommandInstall_Type   = "install"
 	CommandUninstall_Type = "uninstall"
 
-	CommandInstall_Cmd   = "yum install -y golang-github-prometheus-node_exporter && (echo '安装成功'; systemctl start node_exporter) || echo '安装失败'"
-	CommandUninstall_Cmd = "yum remove -y golang-github-prometheus-node_exporter && echo '卸载成功' || echo '卸载失败'"
+	CommandInstall_Cmd   = "yum install -y atune atune-engine && (echo '安装成功'; sed -i '59s/true/false/; 66s/true/false/' /etc/atuned/atuned.cnf; sed -i '22s/true/false/' /etc/atuned/engine.cnf; systemctl restart atuned; systemctl restart atune-engine) || echo '安装失败'"
+	CommandUninstall_Cmd = "yum remove -y atune atune-engine && echo '卸载成功' || echo '卸载失败'"
 )
 
 func AtuneManage(res *common.CmdResult, command_type string) error {

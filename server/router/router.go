@@ -39,8 +39,9 @@ func setupRouter() *gin.Engine {
 func registerAPIs(router *gin.Engine) {
 	logger.Debug("router register")
 	plugin.GlobalClient.RegisterHandlers(router)
+	api := router.Group("/plugin/" + plugin.GlobalClient.PluginInfo.Name)
 
-	atune := router.Group("/plugin/" + plugin.GlobalClient.PluginInfo.Name)
+	atune := api.Group("")
 	{
 		atune.POST("atune_install", controller.AtuneClientInstall)
 		atune.POST("atune_uninstall", controller.AtuneClientRemove)
@@ -48,7 +49,7 @@ func registerAPIs(router *gin.Engine) {
 		atune.GET("info", controller.GetAtuneInfo)
 	}
 
-	dbtune := router.Group("/plugin/" + plugin.GlobalClient.PluginInfo.Name)
+	dbtune := api.Group("")
 	{
 		dbtune.GET("tunes", controller.QueryTunes)
 		dbtune.GET("tunes_noPaged", controller.QueryTunesNoPaged)
@@ -59,7 +60,7 @@ func registerAPIs(router *gin.Engine) {
 		dbtune.GET("tune_machine", controller.GetTuneMachines)
 	}
 
-	task := router.Group("/plugin/" + plugin.GlobalClient.PluginInfo.Name)
+	task := api.Group("")
 	{
 		task.POST("task_run", controller.StartTask)
 		task.POST("task_new", controller.CreatTask)
@@ -68,7 +69,7 @@ func registerAPIs(router *gin.Engine) {
 		task.GET("task_search", controller.SearchTask)
 	}
 
-	restune := router.Group("/plugin/" + plugin.GlobalClient.PluginInfo.Name)
+	restune := api.Group("")
 	{
 		restune.GET("result", controller.QueryResults)
 		restune.GET("tune_result", controller.QueryTuneResults)
