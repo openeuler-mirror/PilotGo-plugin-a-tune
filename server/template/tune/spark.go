@@ -1,5 +1,7 @@
 package tune
 
+import "openeuler.org/PilotGo/atune-plugin/plugin"
+
 type SparkApp struct{}
 
 type SparkImp struct {
@@ -11,7 +13,7 @@ func (spark *SparkApp) Info() *SparkImp {
 	info := &SparkImp{
 		BaseTune: TuneInfo{
 			TuneName:      "spark",
-			WorkDirectory: "mkdir -p /tmp/tune/ && cp -r ../../templete/spark.tar.gz /tmp/tune/ && cd /tmp/tune && tar -xzvf spark.tar.gz",
+			WorkDirectory: "mkdir -p /tmp/tune/ && cd /tmp/tune/ && [ -e spark.tar.gz ] && tar -xzvf spark.tar.gz || ( curl -OJ http://" + plugin.GlobalClient.Server() + "/api/v1/download/spark.tar.gz && tar -xzvf spark.tar.gz)",
 			Prepare:       "cd /tmp/tune/spark && sh run_env.sh",
 			Tune:          "",
 			Restore:       "",

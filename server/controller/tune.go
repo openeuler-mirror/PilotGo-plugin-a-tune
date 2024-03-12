@@ -4,6 +4,7 @@ import (
 	"gitee.com/openeuler/PilotGo/sdk/response"
 	"github.com/gin-gonic/gin"
 	"openeuler.org/PilotGo/atune-plugin/model"
+	"openeuler.org/PilotGo/atune-plugin/plugin"
 	"openeuler.org/PilotGo/atune-plugin/service"
 	"openeuler.org/PilotGo/atune-plugin/template"
 )
@@ -75,9 +76,7 @@ func SaveTune(c *gin.Context) {
 		response.Fail(c, nil, err.Error())
 		return
 	}
-
-	authToken := c.Request.Header.Get("Admin-Token")
-	if err := service.Upload(authToken, "./template/tar", t.TuneName+".tar.gz"); err != nil {
+	if err := plugin.GlobalClient.FileUpload("./template/tar", t.TuneName+".tar.gz"); err != nil {
 		response.Fail(c, nil, err.Error())
 		return
 	}
