@@ -4,14 +4,14 @@
       <el-header height="20%">
         <el-descriptions :column="1">
           <el-descriptions-item label="模板名称：">
-            {{ custom_name }}</el-descriptions-item>
+            {{ tune_detail.custom_name }}</el-descriptions-item>
           <el-descriptions-item label="调优对象：">
-            {{ tuneName }}</el-descriptions-item>
+            {{ tune_detail.tuneName }}</el-descriptions-item>
           <el-descriptions-item label="工作目录：">{{
-            workDir
-          }}</el-descriptions-item>
+          tune_detail.workDir
+        }}</el-descriptions-item>
           <el-descriptions-item label="注意事项：">{{
-            note
+            tune_detail.note
           }}</el-descriptions-item>
           <el-descriptions-item>
             <el-divider />
@@ -36,7 +36,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, watch } from "vue";
 import { Atune } from "@/types/atune";
 const shell = ref("here is every step's shell script");
 let props = defineProps({
@@ -45,23 +45,33 @@ let props = defineProps({
     default: null,
   },
 });
-let { prepare, restore, tune, workDir, tuneName, note, custom_name } =
-  props.selectedEditRow;
+let tune_detail = ref({} as Atune);
+// let { prepare, restore, tune, workDir, tuneName, note, custom_name } =
+//   props.selectedEditRow;
 const stepArr = ['开始', '环境准备', '调优', '环境恢复'];
 const active = ref(1)
 const next = () => {
   if (active.value++ > 3) active.value = 1
 }
+watch(() => props.selectedEditRow, (new_detail) => {
+  if (new_detail) {
+    console.log(new_detail);
+    tune_detail.value = JSON.parse(JSON.stringify(new_detail));
+  }
+}, {
+  deep: true,
+  immediate: true
+})
 watchEffect(() => {
   switch (active.value) {
     case 2:
-      shell.value = prepare;
+      shell.value = tune_detail.value.prepare;
       break;
     case 3:
-      shell.value = tune;
+      shell.value = tune_detail.value.tune;
       break;
     case 4:
-      shell.value = restore;
+      shell.value = tune_detail.value.restore;
       break;
 
     default:

@@ -23,14 +23,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/template",
     component: Atune,
-    meta: { title: "模板列表" },
-    children: [
-      {
-        path: "detail",
-        name: "atuneDetail",
-        component: () => import("../views/atuneDetail.vue"),
-      },
-    ],
+    meta: { title: "模板列表" }
   },
 ];
 const router = createRouter({

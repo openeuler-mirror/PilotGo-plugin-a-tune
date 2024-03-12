@@ -1,6 +1,6 @@
 <template>
   <div class="task_detail">
-    <el-icon class="task_detail_back" size="20" @click="() => router.back()">
+    <el-icon class="task_detail_back" size="20" @click="goBack">
       <Back />
     </el-icon>
     <el-descriptions :column="1">
@@ -11,18 +11,19 @@
       <el-descriptions-item label="任务进度：" style="display:flex; align-items: center;">
         <el-progress style="width: 30%;"
           :percentage="Math.floor(100 * (taskItem.success_count / taskItem.uuid_count))"><span>{{
-            taskItem.success_count
-            + '/' + taskItem.uuid_count }}</span></el-progress>
+      taskItem.success_count
+      + '/' + taskItem.uuid_count }}</span></el-progress>
       </el-descriptions-item>
       <el-descriptions-item label="任务描述：">{{
-        taskItem.description
-      }}</el-descriptions-item>
+      taskItem.description
+    }}</el-descriptions-item>
     </el-descriptions>
     <el-divider content-position="left">调优机器进度&nbsp;
       <el-button size="small" plain type="primary" @click="getDetail">刷新</el-button>
     </el-divider>
     <div class="mac" v-if="showMacProcess">
-      <div class="mac_li" v-for="(item, index) in uuids" :key="item.machineUUID" @click="handleCompare(item.machineUUID)">
+      <div class="mac_li" v-for="(item, index) in uuids" :key="item.machineUUID"
+        @click="handleCompare(item.machineUUID)">
         <span class="mac_li_uuid">
           <p><el-icon>
               <Monitor />
@@ -90,6 +91,9 @@ const currentUuid = ref('');
 onMounted(() => {
   getDetail();
 })
+const goBack = () => {
+  router.push('/')
+}
 const getDetail = () => {
   showMacProcess.value = false;
   uuids = [];
