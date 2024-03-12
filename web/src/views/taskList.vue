@@ -17,13 +17,14 @@
       </el-table-column>
       <el-table-column label="模板名称" :filters="allTune" :filter-method="filterTune">
         <template #default="props">
-          <el-link type="primary" @click="atuneDetail(props.row)">{{ props.row.tune ? props.row.tune.custom_name : "暂无" }}
+          <el-link type="primary" @click="atuneDetail(props.row)">{{ props.row.tune ? props.row.tune.custom_name : "暂无"
+            }}
             <el-icon class="el-icon--right"><icon-view /></el-icon></el-link>
         </template>
       </el-table-column>
       <el-table-column prop="task_status" label="状态">
         <template #default="{ row }">
-          <div style="display: flex;align-items: center; background-color: ;">
+          <div style="display: flex;align-items: center;">
             <el-icon class="is-loading" color="#409eff" v-if="row.task_status == '运行中'">
               <Loading />
             </el-icon>
@@ -40,16 +41,17 @@
       <el-table-column prop="task_process" label="进度">
         <template #default="props">
           <el-progress :percentage="Math.floor(100 * (props.row.success_count / props.row.uuid_count))"><span>{{
-            props.row.success_count
-            + '/' + props.row.uuid_count }}</span></el-progress>
+      props.row.success_count
+      + '/' + props.row.uuid_count }}</span></el-progress>
         </template>
       </el-table-column>
       <el-table-column prop="create_time" label="创建时间" />
       <el-table-column prop="update_time" label="更新时间" />
       <el-table-column label="操作" width="160">
         <template #default="{ row }">
-          <my-button round size="small" :disabled="row.task_status === '运行中'" @click="handleStart(row)">{{ row.task_status
-            === '等待' ? '启动' : '重启' }}</my-button>
+          <my-button round size="small" :disabled="row.task_status === '运行中'" @click="handleStart(row)">{{
+      row.task_status
+        === '等待' ? '启动' : '重启' }}</my-button>
           <my-button round size="small" @click="handleDetail(row)">详情</my-button>
         </template>
       </el-table-column>

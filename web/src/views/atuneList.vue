@@ -1,5 +1,5 @@
 <template>
-  <div class="tuneList shadow">
+  <div class="tuneList">
     <my-table ref="tuneRef" :get-data="getTuneLists" :get-all-data="getTuneLists" :del-func="deleteTune"
       :search-func="searchTune">
       <template #listName>模板列表</template>
