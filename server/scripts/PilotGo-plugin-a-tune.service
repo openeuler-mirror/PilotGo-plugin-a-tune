@@ -1,0 +1,11 @@
+[Unit]
+Description=PilotGo plugin a-tune
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=3s
+WorkingDirectory=/opt/PilotGo/plugin/a-tune/server
+ExecStart=/opt/PilotGo/plugin/a-tune/server/PilotGo-plugin-a-tune
