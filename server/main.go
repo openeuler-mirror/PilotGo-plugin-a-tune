@@ -33,6 +33,7 @@ func main() {
 	plugin.GlobalClient = client.DefaultClient(plugin.Init(config.Config().PluginAtune))
 	service.GetTags()
 	service.AddExtentions()
+	service.AddPermission()
 
 	err := router.HttpServerInit(config.Config().HttpServer)
 	if err != nil {

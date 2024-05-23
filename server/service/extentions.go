@@ -11,26 +11,40 @@ func AddExtentions() {
 		Type:       common.ExtentionMachine,
 		Name:       "安装a-tune",
 		URL:        "/plugin/atune/atune_install",
-		Permission: "plugin.atune.agent/install",
+		Permission: "plugin.atune/agent_install",
 	}
 	me2 := &common.MachineExtention{
 		Type:       common.ExtentionMachine,
 		Name:       "卸载a-tune",
 		URL:        "/plugin/atune/atune_uninstall",
-		Permission: "plugin.atune.agent/uninstall",
+		Permission: "plugin.atune/agent_uninstall",
 	}
 	pe1 := &common.PageExtention{
 		Type:       common.ExtentionPage,
 		Name:       "任务列表",
 		URL:        "/task",
-		Permission: "plugin.prometheus.page/menu",
+		Permission: "plugin.atune.page/menu",
 	}
 	pe2 := &common.PageExtention{
 		Type:       common.ExtentionPage,
 		Name:       "调优模板",
 		URL:        "/template",
-		Permission: "plugin.prometheus.page/menu",
+		Permission: "plugin.atune.page/menu",
 	}
 	ex = append(ex, me1, me2, pe1, pe2)
 	plugin.GlobalClient.RegisterExtention(ex)
+}
+
+func AddPermission() {
+	var ps []common.Permission
+	p1 := common.Permission{
+		Resource: "plugin.atune",
+		Operate:  "agent_install",
+	}
+	p2 := common.Permission{
+		Resource: "plugin.atune",
+		Operate:  "agent_uninstall",
+	}
+	ps = append(ps, p1, p2)
+	plugin.GlobalClient.RegisterPermission(ps)
 }
