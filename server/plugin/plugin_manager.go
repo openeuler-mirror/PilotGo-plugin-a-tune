@@ -17,7 +17,7 @@ func Init(plugin *config.PluginAtune) *client.PluginInfo {
 		Author:      "zhanghan",
 		Email:       "zhanghan@kylinos.cn",
 		Url:         plugin.URL,
-		PluginType:  plugin.PluginType,
+		PluginType:  "micro-app",
 	}
 
 	return &PluginInfo

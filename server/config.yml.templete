@@ -1,6 +1,5 @@
 plugin_atune:
   url: "http://localhost:8099"
-  plugin_type: "micro-app" # iframe micro-app
 http_server:
   addr: "localhost:8099"
 log:
