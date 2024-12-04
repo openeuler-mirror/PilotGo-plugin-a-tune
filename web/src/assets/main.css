@@ -1,10 +1,18 @@
+/* 
+ * Copyright (c) KylinSoft  Co., Ltd. 2024.All rights reserved.
+ * PilotGo-plugin-a-tune licensed under the Mulan Permissive Software License, Version 2. 
+ * See LICENSE file for more details.
+ * Author: zhaozhenfang <zhaozhenfang@kylinos.cn>
+ * Date: Tue Jan 23 15:19:40 2024 +0800
+ */
 * {
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
 }
 
-html,body {
+html,
+body {
   height: 100%;
   width: 100%;
   -moz-osx-font-smoothing: grayscale;
@@ -16,10 +24,12 @@ html,body {
     Segoe UI, roboto, Helvetica Neue, arial, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", Segoe UI Symbol;
 }
+
 .flex {
   display: flex;
   align-items: center;
 }
+
 :root {
-  --active-color:rgb(241, 139, 14);
+  --active-color: rgb(241, 139, 14);
 }
