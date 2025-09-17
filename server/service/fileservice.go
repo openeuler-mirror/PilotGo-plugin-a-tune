@@ -1,6 +1,6 @@
 /*
  * Copyright (c) KylinSoft  Co., Ltd. 2024.All rights reserved.
- * PilotGo-plugin-a-tune licensed under the Mulan Permissive Software License, Version 2. 
+ * PilotGo-plugin-a-tune licensed under the Mulan Permissive Software License, Version 2.
  * See LICENSE file for more details.
  * Author: zhanghan2021 <zhanghan@kylinos.cn>
  * Date: Fri Jan 12 14:12:37 2024 +0800
@@ -17,7 +17,7 @@ import (
 	"path/filepath"
 
 	"gitee.com/openeuler/PilotGo/sdk/logger"
-	"openeuler.org/PilotGo/atune-plugin/plugin"
+	"openeuler.org/PilotGo/atune-plugin/config"
 )
 
 func Upload(cookie string, filePath string, filename string) error {
@@ -28,7 +28,9 @@ func Upload(cookie string, filePath string, filename string) error {
 		return err
 	}
 
-	upload_addr := "http://" + plugin.GlobalClient.Server() + "/api/v1/upload?filename=" + filename
+	// 从配置文件读取主程序地址
+	baseAddr := config.Config().HttpServer.Addr
+	upload_addr := "http://" + baseAddr + "/api/v1/upload?filename=" + filename
 	request, err := http.NewRequest("POST", upload_addr, bodyBuf)
 	if err != nil {
 		return err

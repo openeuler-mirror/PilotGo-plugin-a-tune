@@ -14,3 +14,11 @@ mysql:
   user: ''
   password: ''
   database: PluginAtune
+etcd:
+  endpoints:
+    - "localhost:2379"
+  service_name: "atune-service"
+  version: "3.0"
+  dial_timeout: 5s
+  menu_name: "机器调优"
+  icon: "Setting"

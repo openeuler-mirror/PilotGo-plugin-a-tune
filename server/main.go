@@ -1,6 +1,6 @@
 /*
  * Copyright (c) KylinSoft  Co., Ltd. 2024.All rights reserved.
- * PilotGo-plugin-a-tune licensed under the Mulan Permissive Software License, Version 2. 
+ * PilotGo-plugin-a-tune licensed under the Mulan Permissive Software License, Version 2.
  * See LICENSE file for more details.
  * Author: zhanghan2021 <zhanghan@kylinos.cn>
  * Date: Fri Jan 12 14:12:37 2024 +0800
@@ -13,6 +13,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"gitee.com/openeuler/PilotGo/sdk/go-micro/registry"
 	"gitee.com/openeuler/PilotGo/sdk/logger"
 	"gitee.com/openeuler/PilotGo/sdk/plugin/client"
 	"openeuler.org/PilotGo/atune-plugin/config"
@@ -37,12 +38,32 @@ func main() {
 		os.Exit(-1)
 	}
 
-	plugin.GlobalClient = client.DefaultClient(plugin.Init(config.Config().PluginAtune))
-	service.GetTags()
-	service.AddExtentions()
-	service.AddPermission()
+	// etcd service registration (like prometheus)
+	sr, err := registry.NewServiceRegistrar(&registry.Options{
+		Endpoints:   config.Config().Etcd.Endpoints,
+		ServiceAddr: config.Config().HttpServer.Addr,
+		ServiceName: config.Config().Etcd.ServiveName,
+		Version:     config.Config().Etcd.Version,
+		MenuName:    config.Config().Etcd.MenuName,
+		Icon:        config.Config().Etcd.Icon,
+		DialTimeout: config.Config().Etcd.DialTimeout,
+		Extentions:  service.GetExtentions(),
+		Permissions: service.GetPermissions(),
+	})
+	if err != nil {
+		logger.Error("failed to initialize registry: %s", err)
+		os.Exit(-1)
+	}
 
-	err := router.HttpServerInit(config.Config().HttpServer)
+	cli, err := client.NewClient(config.Config().Etcd.ServiveName, sr.Registry)
+	if err != nil {
+		logger.Error("failed to create plugin client: %s", err)
+		os.Exit(-1)
+	}
+	plugin.GlobalClient = cli
+	service.GetTags()
+
+	err = router.HttpServerInit(config.Config().HttpServer)
 	if err != nil {
 		logger.Error("http server init failed, error:%v", err)
 		os.Exit(-1)

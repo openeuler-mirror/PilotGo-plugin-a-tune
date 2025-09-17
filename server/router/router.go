@@ -35,7 +35,7 @@ func HttpServerInit(conf *config.HttpServer) error {
 func setupRouter() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.New()
-	router.Use(logger.RequestLogger())
+	router.Use(logger.RequestLogger([]string{}))
 	router.Use(gin.Recovery())
 
 	registerAPIs(router)
@@ -46,7 +46,7 @@ func setupRouter() *gin.Engine {
 func registerAPIs(router *gin.Engine) {
 	logger.Debug("router register")
 	plugin.GlobalClient.RegisterHandlers(router)
-	api := router.Group("/plugin/" + plugin.GlobalClient.PluginInfo.Name)
+	api := router.Group("/plugin/atune")
 
 	atune := api.Group("")
 	{

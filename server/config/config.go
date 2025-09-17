@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"time"
 
 	"gitee.com/openeuler/PilotGo/sdk/logger"
 	"gopkg.in/yaml.v2"
@@ -32,11 +33,21 @@ type MysqlDBInfo struct {
 	DataBase string `yaml:"database"`
 }
 
+type Etcd struct {
+	Endpoints   []string      `yaml:"endpoints"`
+	ServiveName string        `yaml:"service_name"`
+	Version     string        `yaml:"version"`
+	MenuName    string        `yaml:"menu_name"`
+	Icon        string        `yaml:"icon"`
+	DialTimeout time.Duration `yaml:"dial_timeout"`
+}
+
 type ServerConfig struct {
 	PluginAtune *PluginAtune    `yaml:"plugin_atune"`
 	HttpServer  *HttpServer     `yaml:"http_server"`
 	Logopts     *logger.LogOpts `yaml:"log"`
 	Mysql       *MysqlDBInfo    `yaml:"mysql"`
+	Etcd        *Etcd           `yaml:"etcd"`
 }
 
 const config_file = "./config.yml"
