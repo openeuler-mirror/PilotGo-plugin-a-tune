@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) KylinSoft  Co., Ltd. 2024.All rights reserved.
+ * PilotGo licensed under the Mulan Permissive Software License, Version 2.
+ * See LICENSE file for more details.
+ * Author: zhanghan2021 <zhanghan@kylinos.cn>
+ * Date: Tue Mar 12 15:33:09 2024 +0800
+ */
 package client
 
 import (
@@ -5,12 +12,16 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gitee.com/openeuler/PilotGo/sdk/logger"
+	"gitee.com/openeuler/PilotGo/sdk/plugin/jwt"
+	"gitee.com/openeuler/PilotGo/sdk/utils/httputils"
 )
 
 func (client *Client) FileUpload(filePath string, filename string) error {
@@ -21,7 +32,21 @@ func (client *Client) FileUpload(filePath string, filename string) error {
 		return err
 	}
 
-	upload_addr := "http://" + client.Server() + "/api/v1/pluginapi/upload?filename=" + filename
+	serverInfo, err := client.Registry.Get("pilotgo-server")
+	if err != nil {
+		return err
+	}
+	upload_addr := fmt.Sprintf("http://%s:%s/api/v1/pluginapi/upload?filename=%s", serverInfo.Address, serverInfo.Port, filename)
+
+	// 判断服务端是否是http协议
+	ishttp, err := httputils.ServerIsHttp(upload_addr)
+	if err != nil {
+		return err
+	}
+	if !ishttp {
+		upload_addr = fmt.Sprintf("https://%s", strings.Split(upload_addr, "://")[1])
+	}
+
 	req, err := http.NewRequest("POST", upload_addr, bodyBuf)
 	if err != nil {
 		return err
@@ -30,7 +55,7 @@ func (client *Client) FileUpload(filePath string, filename string) error {
 
 	req.Header.Set("Content-Type", contentType)
 	req.AddCookie(&http.Cookie{
-		Name:  TokenCookie,
+		Name:  jwt.TokenCookie,
 		Value: client.token,
 	})
 

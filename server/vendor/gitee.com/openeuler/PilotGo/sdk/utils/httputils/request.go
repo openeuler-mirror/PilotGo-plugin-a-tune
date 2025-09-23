@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) KylinSoft  Co., Ltd. 2024.All rights reserved.
+ * PilotGo licensed under the Mulan Permissive Software License, Version 2.
+ * See LICENSE file for more details.
+ * Author: zhanghan2021 <zhanghan@kylinos.cn>
+ * Date: Wed Sep 27 17:35:12 2023 +0800
+ */
 package httputils
 
 import (
@@ -11,6 +18,17 @@ import (
 )
 
 func request(method, url string, param *Params) (*Response, error) {
+	// 判断服务端是否是http协议
+	ishttp, err := ServerIsHttp(url)
+	if err != nil {
+		return nil, err
+	}
+	if ishttp {
+		url = fmt.Sprintf("http://%s", strings.Split(url, "://")[1])
+	} else {
+		url = fmt.Sprintf("https://%s", strings.Split(url, "://")[1])
+	}
+
 	// 处理form参数
 	if param != nil && len(param.Form) > 0 {
 		s := ""

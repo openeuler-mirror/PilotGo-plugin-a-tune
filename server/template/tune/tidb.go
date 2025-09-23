@@ -1,13 +1,15 @@
 /*
  * Copyright (c) KylinSoft  Co., Ltd. 2024.All rights reserved.
- * PilotGo-plugin-a-tune licensed under the Mulan Permissive Software License, Version 2. 
+ * PilotGo-plugin-a-tune licensed under the Mulan Permissive Software License, Version 2.
  * See LICENSE file for more details.
  * Author: zhanghan2021 <zhanghan@kylinos.cn>
  * Date: Fri Jan 12 14:12:37 2024 +0800
  */
 package tune
 
-import "openeuler.org/PilotGo/atune-plugin/plugin"
+import (
+	"openeuler.org/PilotGo/atune-plugin/config"
+)
 
 type TidbApp struct{}
 
@@ -20,7 +22,7 @@ func (tidb *TidbApp) Info() *TidbImp {
 	info := &TidbImp{
 		BaseTune: TuneInfo{
 			TuneName:      "tidb",
-			WorkDirectory: "mkdir -p /tmp/tune/ && cd /tmp/tune/ && [ -e tidb.tar.gz ] && tar -xzvf tidb.tar.gz || ( curl -OJ http://" + plugin.GlobalClient.Server() + "/api/v1/download/tidb.tar.gz && tar -xzvf tidb.tar.gz)",
+			WorkDirectory: "mkdir -p /tmp/tune/ && cd /tmp/tune/ && [ -e tidb.tar.gz ] && tar -xzvf tidb.tar.gz || ( curl -OJ http://" + config.Config().HttpServer.Addr + "/api/v1/download/tidb.tar.gz && tar -xzvf tidb.tar.gz)",
 			Prepare:       "cd /tmp/tune/tidb && sh prepare.sh",
 			Tune:          "cd /tmp/tune/tidb && atune-adm tuning --project tidb --detail tidb_client.yaml",
 			Restore:       "cd /tmp/tune/tidb && atune-adm tuning --restore --project tidb",
